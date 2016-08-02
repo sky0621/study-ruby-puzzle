@@ -8,53 +8,29 @@ class A002
 
 	def answer
 		p "Answer"
-		(1000..9999).each do |i|
-			isReverse(i)
-		end
-	end
-
-	def targets(num)
-		targets = []
-		tempArray = []
-		# f.e. 1234 -> [1][2][3][4]
-		numArray = num.to_s.split("")
-		# 1 -> 0 -> 0 -> 0
-		# 1 -> 2 -> 3 -> 4
-		numArray.each do |snum|
-			if snum.to_i == 0
-				next
-			end
-			if targets.empty?
-				targets << snum
-				# now : targets = [1]
-			else
-				# f.e. [1]
-				# next [1*2] -> [1/2] -> [1+2] -> [1-2]
-				targets.each do |target|
-					@@OP.each do |op|
-						tempArray << target + op + snum
-						# next [1*2*3]
+		(1000..9999).each do |num|
+			nums = num.to_s.split("")
+			@@OP.each do |op|
+				@@OP.each do |op2|
+					@@OP.each do |op3|
+						culc = ""
+						if nums[0] != "0"
+							culc += nums[0]
+						end
+						if nums[1] != "0"
+							culc += (op + nums[1])
+						end
+						if nums[2] != "0"
+							culc += (op2 + nums[2])
+						end
+						if nums[3] != "0"
+							culc += (op3 + nums[3])
+						end
+						if eval(culc).to_s == num.to_s.reverse
+							pp num
+						end
 					end
-					# now : tempArray = [1*2][1/2][1+2][1-2]
 				end
-				targets = tempArray
-				tempArray = []
-			end
-		end
-		return targets
-	end
-
-	def isReverse(num)
-		targets = targets(num)
-pp targets
-		targets.each do |target|
-			ev = eval(target)
-			if ev < 1
-				next
-			end
-			if ev == num.to_s.reverse.to_i
-pp "[num]:" + num.to_s + ", [rev]:" + num.to_s.reverse + ", [culc]:" + target
-pp ev
 			end
 		end
 	end
