@@ -1,3 +1,4 @@
+require "pp"
 
 class A002
 
@@ -7,14 +8,8 @@ class A002
 
 	def answer
 		p "Answer"
-		(1000..1234).each do |i|
-			p i
-#			if isReverse(i)
-p targets(i)
-#			end
-p " "
-p " "
-p " "
+		(1000..9999).each do |i|
+			isReverse(i)
 		end
 	end
 
@@ -23,20 +18,24 @@ p " "
 		tempArray = []
 		# f.e. 1234 -> [1][2][3][4]
 		numArray = num.to_s.split("")
+		# 1 -> 0 -> 0 -> 0
 		# 1 -> 2 -> 3 -> 4
 		numArray.each do |snum|
+			if snum.to_i == 0
+				next
+			end
 			if targets.empty?
-				@@OP.each do |op|
-					targets << snum + op
-				end
-				# now : targets = [1*][1/][1+][1-]
+				targets << snum
+				# now : targets = [1]
 			else
-				# f.e. [1*] -> [1/] -> [1+] -> [1-]
+				# f.e. [1]
+				# next [1*2] -> [1/2] -> [1+2] -> [1-2]
 				targets.each do |target|
 					@@OP.each do |op|
-						tempArray << target + snum + op
+						tempArray << target + op + snum
+						# next [1*2*3]
 					end
-					# now : tempArray = [1*2*][1*2/][1*2+][1*2-][1/2*][1/2/][1/2+][1/2-][1+2*][1+2/][1+2+][1+2-][1-2*][1-2/][1-2+][1-2-]
+					# now : tempArray = [1*2][1/2][1+2][1-2]
 				end
 				targets = tempArray
 				tempArray = []
@@ -46,23 +45,17 @@ p " "
 	end
 
 	def isReverse(num)
-		cls = []
-		cls2 = []
-		ss = num.to_s.split("")
-		ss.each do |s|
-p "< " + s
-			if cls.empty?
-				@@OP.each do |o|
-					cls << s + o
-				end
-			else
-				cls.each do |c|
-					@@OP.each do |o|
-						cls2 << c + s + o
-					end
-				end
+		targets = targets(num)
+pp targets
+		targets.each do |target|
+			ev = eval(target)
+			if ev < 1
+				next
 			end
-p cls2
+			if ev == num.to_s.reverse.to_i
+pp "[num]:" + num.to_s + ", [rev]:" + num.to_s.reverse + ", [culc]:" + target
+pp ev
+			end
 		end
 	end
 
